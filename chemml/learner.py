@@ -5,9 +5,12 @@ import pandas as pd
 from collections import defaultdict
 from sklearn.cluster import KMeans
 from sklearn.manifold import SpectralEmbedding
-from sklearn.metrics import explained_variance_score
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import r2_score
+from sklearn.metrics import (
+    explained_variance_score,
+    mean_squared_error,
+    r2_score,
+    mean_absolute_error
+)
 
 
 class BaseLearner:
@@ -37,6 +40,7 @@ class BaseLearner:
         r2 = r2_score(y, y_pred)
         ex_var = explained_variance_score(y, y_pred)
         mse = mean_squared_error(y, y_pred)
+        mae = mean_absolute_error(y, y_pred)
         if len(y.shape) == 1:
             out = pd.DataFrame({'#target': y,
                                 'predict': y_pred,
@@ -78,7 +82,7 @@ class BaseLearner:
                 info = ';'.join(list(map(str.__add__, info, k)))
                 similar_data.append(info)
             out.loc[:, 'similar_mols'] = similar_data
-        return r2, ex_var, mse, out.sort_values(by='abs_dev', ascending=False)
+        return r2, ex_var, mse, mae, out.sort_values(by='abs_dev', ascending=False)
 
     def evaluate_test(self, debug=True, alpha=None):
         x = self.test_X

@@ -7,7 +7,8 @@ import pandas as pd
 from sklearn.metrics import (
     r2_score,
     explained_variance_score,
-    mean_squared_error
+    mean_squared_error,
+    mean_absolute_error
 )
 
 CWD = os.path.dirname(os.path.abspath(__file__))
@@ -165,11 +166,12 @@ def gpr_run(df, df_train, df_test, train_X, train_Y, train_smiles, test_X,
         else:
             learner.train()
             learner.model.save(result_dir)
-        r2, ex_var, mse, out = learner.evaluate_loocv()
+        r2, ex_var, mse, mae, out = learner.evaluate_loocv()
         print('LOOCV:')
         print('score: %.5f' % r2)
         print('explained variance score: %.5f' % ex_var)
         print('mse: %.5f' % mse)
+        print('mae: %.5f' % mae)
         out.to_csv('%s/loocv.log' % result_dir, sep='\t', index=False,
                    float_format='%15.10f')
     elif mode == 'lomocv':
@@ -196,10 +198,12 @@ def gpr_run(df, df_train, df_test, train_X, train_Y, train_smiles, test_X,
         r2 = r2_score(out['#target'], out['predict'])
         ex_var = explained_variance_score(out['#target'], out['predict'])
         mse = mean_squared_error(out['#target'], out['predict'])
+        mae = mean_absolute_error(out['#target'], out['predict'])
         print('LOMOCV:')
         print('score: %.5f' % r2)
         print('explained variance score: %.5f' % ex_var)
         print('mse: %.5f' % mse)
+        print('mae: %.5f' % mae)
         out.to_csv('%s/lomocv.log' % result_dir, sep='\t', index=False,
                    float_format='%15.10f')
     else:
@@ -209,18 +213,20 @@ def gpr_run(df, df_train, df_test, train_X, train_Y, train_smiles, test_X,
         learner.train()
         learner.model.save(result_dir)
         print('***\tEnd: hyperparameters optimization.\t***\n')
-        r2, ex_var, mse, out = learner.evaluate_train()
+        r2, ex_var, mse, mae, out = learner.evaluate_train()
         print('Training set:')
         print('score: %.5f' % r2)
         print('explained variance score: %.5f' % ex_var)
         print('mse: %.5f' % mse)
+        print('mae: %.5f' % mae)
         out.to_csv('%s/train.log' % result_dir, sep='\t', index=False,
                    float_format='%15.10f')
-        r2, ex_var, mse, out = learner.evaluate_test()
+        r2, ex_var, mse, mae, out = learner.evaluate_test()
         print('Test set:')
         print('score: %.5f' % r2)
         print('explained variance score: %.5f' % ex_var)
         print('mse: %.5f' % mse)
+        print('mae: %.5f' % mae)
         out.to_csv('%s/test.log' % result_dir, sep='\t', index=False,
                    float_format='%15.10f')
 
