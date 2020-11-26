@@ -142,7 +142,7 @@ def read_input(result_dir, input, property, mode, seed,
 def gpr_run(df, df_train, df_test, train_X, train_Y, train_smiles, test_X,
             test_Y, test_smiles,
             result_dir, property, mode, optimizer, alpha, load_model,
-            kernel_config, get_graph, get_XY_from_df, Learner):
+            kernel_config, get_graph, get_XY_from_df, Learner, tag):
     # pre-calculate graph kernel matrix.
     if get_graph and optimizer is None:
         print('***\tStart: Graph kernels calculating\t***')
@@ -219,7 +219,7 @@ def gpr_run(df, df_train, df_test, train_X, train_Y, train_smiles, test_X,
         print('explained variance score: %.5f' % ex_var)
         print('mse: %.5f' % mse)
         print('mae: %.5f' % mae)
-        out.to_csv('%s/train.log' % result_dir, sep='\t', index=False,
+        out.to_csv('%s/train-%i.log' % (result_dir, tag), sep='\t', index=False,
                    float_format='%15.10f')
         r2, ex_var, mse, mae, out = learner.evaluate_test()
         print('Test set:')
@@ -227,7 +227,7 @@ def gpr_run(df, df_train, df_test, train_X, train_Y, train_smiles, test_X,
         print('explained variance score: %.5f' % ex_var)
         print('mse: %.5f' % mse)
         print('mae: %.5f' % mae)
-        out.to_csv('%s/test.log' % result_dir, sep='\t', index=False,
+        out.to_csv('%s/test-%i.log' % (result_dir, tag), sep='\t', index=False,
                    float_format='%15.10f')
 
 
@@ -343,7 +343,7 @@ def main():
             test_Y, test_smiles,
             result_dir, args.property, args.mode, optimizer, args.alpha,
             args.load_model,
-            kernel_config, get_graph, get_XY_from_df, Learner)
+            kernel_config, get_graph, get_XY_from_df, Learner, args.seed)
 
 
 if __name__ == '__main__':
