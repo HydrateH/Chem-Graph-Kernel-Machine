@@ -166,7 +166,8 @@ class ActiveLearner:
         )
         self.stride = stride
         self.learning_log = pd.DataFrame({
-            '#size': [], 'r2': [], 'mse': [], 'ex-var': [], 'search_size': []
+            '#size': [], 'mae': [], 'r2': [], 'mse': [], 'ex-var': [],
+            'search_size': []
         })
 
     def stop_sign(self):
@@ -319,11 +320,11 @@ class ActiveLearner:
 
     def evaluate(self, train_output=True, debug=True):
         # print('%s' % (time.asctime(time.localtime(time.time()))))
-        r2, ex_var, mse, out = self.learner.evaluate_test(debug=debug)
+        r2, ex_var, mse, mae, out = self.learner.evaluate_test(debug=debug)
         print("R-square:%.3f\nMSE:%.3g\nexplained_variance:%.3f\n" %
               (r2, mse, ex_var))
         self.learning_log.loc[self.current_size] = (
-            self.current_size, r2, mse,
+            self.current_size, mae, r2, mse,
             ex_var,
             self.search_size
         )
@@ -335,7 +336,7 @@ class ActiveLearner:
         )
 
         if train_output:
-            r2, ex_var, mse, out = self.learner.evaluate_train(debug=debug)
+            r2, ex_var, mse, mae, out = self.learner.evaluate_train(debug=debug)
             out.to_csv(
                 '%s/%i-train.log' % (self.result_dir, self.current_size),
                 sep='\t',
