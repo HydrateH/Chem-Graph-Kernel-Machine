@@ -139,10 +139,13 @@ class VectorFPConfig:
     def get_kernel(self, inchi_list):
         self.X = self.fp.get_fp_list(inchi_list, size=self.size)
         kernel_size = self.X.shape[1]
+        length_scale = np.ones(kernel_size)
         if self.features is not None:
             kernel_size += len(self.features)
+            length_scale = np.r_[length_scale, self.hyperparameters]
         self.kernel = gp.kernels.ConstantKernel(1.0, (1e-3, 1e3)) *\
-                      gp.kernels.RBF(length_scale=np.ones(kernel_size))
+                      gp.kernels.RBF(length_scale=length_scale)
+        print(self.kernel.theta)
         if self.theta is not None:
             print('Reading Existed kernel parameter %s' % self.theta)
             with open(self.theta, 'rb') as file:
