@@ -48,11 +48,6 @@ pip install graphdot==0.7
         ```
         CPU: python3 run/txt2pkl.py --result_dir run/tt-regression -i run/examples/tt.txt --input_config inchi::tt
         GPU: python3 run/KernelCalc.py --result_dir run/tt-regression -i run/examples/tt.txt --input_config inchi::tt --normalized --json_hyper hyperparameters/tensorproduct.json
-        CPU: python3 run/GPR.py --result_dir run/tt-regression --gpr sklearn:none --kernel preCalc::0.01 -i run/examples/tt.txt --train_test_config loocv:::0 --json_hyper hyperparameters/tensorproduct.json
+        CPU: python3 run/GPR.py --result_dir run/tt-regression --gpr sklearn:none --kernel preCalc::0.01 -i run/examples/tt.txt --input_config inchi::tt --train_test_config loocv:::0 --json_hyper hyperparameters/tensorproduct.json
         GPU: python3 run/preCalc2graph.py --result_dir run/tt-regression --gpr sklearn --normalized --input_config inchi::tt --json_hyper hyperparameters/tensorproduct.json
-        ```
-    
-    - Active Learning
-        ```
-        
         ```
